@@ -13,14 +13,18 @@ class path_detection:
     def __init__(self, model):
         self.model= model
         t1 = time.time()
-        #net = jetson.inference.segNet(argv=["D-78.69006752597979-0.jpg", "output.jpg", "--model=fcn_resnet18.onnx", "--labels=classes.txt", "--colors=colors.txt","--input-blob=input_0", "--output_blob=output_0", ])
-        self.net = jetson.inference.segNet(argv=["--model={}".format(self.model), "--labels=ai_model/classes.txt", "--colors=ai_model/colors.txt","--input-blob=input_0", "--output_blob=output_0"])
+        #net = jetson.inference.segNet(argv=[input.jpg, "output.jpg", "--model=fcn_resnet18.onnx", "--labels=classes.txt", "--colors=colors.txt","--input-blob=input_0", "--output_blob=output_0", ])
+        self.net = jetson.inference.segNet(argv=["--model={}".format(self.model), 
+                                                 "--labels=ai_model/classes.txt", 
+                                                 "--colors=ai_model/colors.txt",
+                                                 "--input-blob=input_0", 
+                                                 "--output_blob=output_0"])
         t2 = time.time()
         print("process:",t2 - t1)
 
     def process(self,input_img, output_img= 'output.jpg'):
         t1 = time.time()
-        
+
         # uncomment below if you need to rescale your input image
         # im = Image.open(input_img)
         # im_resized = im.resize((848,480), Image.ANTIALIAS)
@@ -43,7 +47,14 @@ class path_detection:
         self.net.SetOverlayAlpha(opt.alpha)
         # create buffer manager
         buffers = segmentationBuffers(self.net, opt)
-        sys_argv = ['segnet.py', "--model={}".format(self.model), '--labels=ai_model/classes.txt', '--colors=ai_model/colors.txt', '--input-blob=input_0', '--output_blob=output_0', input_img, output_img]
+        sys_argv = ['segnet.py', 
+                    "--model={}".format(self.model), 
+                    '--labels=ai_model/classes.txt', 
+                    '--colors=ai_model/colors.txt', 
+                    '--input-blob=input_0', 
+                    '--output_blob=output_0', 
+                    input_img, 
+                    output_img]
         # create video sources & outputs
         input = jetson.utils.videoSource(input_img,sys_argv)
         output = jetson.utils.videoOutput(output_img,sys_argv)
@@ -70,7 +81,7 @@ class path_detection:
 
 t1 = time.time()
 # pre-load detection modle, it is takes around 20s when you load it first time and 10s after first load
-path_detect= segnet.path_detection("ai_model/fcn_resnet18_JF_1280_720_5_150_206.onnx")
+path_detect= segnet.path_detection("ai_model/fcn_resnet18.onnx")
 print("load time used: ", time.time() - t1)
 
 t2 = time.time()
