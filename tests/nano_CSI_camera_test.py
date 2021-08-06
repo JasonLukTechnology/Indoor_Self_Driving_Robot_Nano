@@ -59,9 +59,10 @@ class nano_cam:
             self.cap.release()
             
 
-t1 = time.time() # start time in seconds
-c = nano_cam()
-time.sleep(0.2)
-c.show_camera("jasonluk_test.jpg")
-c.close_camera()
-print(time.time()-t1) # calculate time usage in seconds
+if __name__ == "__main__":
+     t1 = time.time() # start time in seconds
+     c = nano_cam() # Initiate the camera
+     time.sleep(0.2) # Wait for 2 secs
+     c.show_camera("jasonluk_test.jpg") # capture image
+     c.close_camera() # Close camera object
+     print(time.time()-t1) # calculate time usage in seconds
